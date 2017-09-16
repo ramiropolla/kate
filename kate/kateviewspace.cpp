@@ -470,6 +470,17 @@ void KateViewSpace::documentDestroyed(QObject *doc)
     Q_ASSERT(m_lruDocList.contains(invalidDoc));
     m_lruDocList.remove(m_lruDocList.indexOf(invalidDoc));
 
+    if ( !m_lruDocList.empty() )
+    {
+        KTextEditor::Document *last = m_lruDocList.last();
+        if ( m_docToView.contains(last) )
+        {
+            KTextEditor::View *kv = m_docToView[last];
+            stack->setCurrentWidget(kv);
+            kv->show();
+        }
+    }
+
     // disconnect entirely
     disconnect(doc, nullptr, this, nullptr);
 
